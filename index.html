@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Convert webpage to e-book (ePUB)</title>
+    <meta
+      name="description"
+      content="Adjust and convert a public webpage to ePUB format." />
+    <meta name="keywords" content="epub,page-to-epub,html-to-epub" />
+    <link rel="stylesheet" href="css/normalize.min.css" />
+    <link rel="stylesheet" href="css/milligram.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <h1>Convert webpage to e-book (ePUB)</h1>
+        <p class="center">
+          Adjusting the webpage, removing content from original webpage like
+          forms, videos, audios, frames, scripts and styles, trying to improve
+          the readability on ePUB readers.
+        </p>
+      </div>
+      <div class="row">
+        <main class="column column-80 column-offset-10">
+          <form id="form">
+            <div>
+              <label for="url">Page URL</label>
+              <input
+                id="url"
+                name="url"
+                type="url"
+                required
+                placeholder="https://www.example.com/" />
+            </div>
+            <div class="center">
+              <button type="submit">Download page on ePUB format</button>
+            </div>
+          </form>
+          <progress id="progress"></progress>
+        </main>
+      </div>
+    </div>
+    <script src="js/jszip.min.js"></script>
+    <script src="js/ejs.min.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
