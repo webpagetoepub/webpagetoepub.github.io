@@ -1,0 +1,20 @@
+{
+    "name": "Webpage to e-book",
+    "short_name": "Webpage2EPUB",
+    "description": "Convert webpage to e-book (ePUB)",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/android-chrome-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}
