@@ -5,37 +5,37 @@
     "description": "Adjust and convert a public webpage to ePUB format.",
     "icons": [
         {
-            "src": "/android-chrome-192x192.png",
+            "src": "/img/android-chrome-192x192.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/android-chrome-256x256.png",
+            "src": "/img/android-chrome-256x256.png",
             "sizes": "256x256",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/android-chrome-512x512.png",
+            "src": "/img/android-chrome-512x512.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/maskable_icon_x192.png",
+            "src": "/img/maskable_icon_x192.png",
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "maskable"
         },
         {
-            "src": "/maskable_icon_x256.png",
+            "src": "/img/maskable_icon_x256.png",
             "sizes": "256x256",
             "type": "image/png",
             "purpose": "maskable"
         },
         {
-            "src": "/maskable_icon_x512.png",
+            "src": "/img/maskable_icon_x512.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
