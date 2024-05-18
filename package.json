@@ -1,0 +1,22 @@
+{
+  "name": "webpagetoepub",
+  "version": "1.0.0",
+  "description": "Convert any webpage to an EPUB file",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "concat-css": "cleancss -o css/style.min.css css/normalize.min.css css/milligram.min.css css/main.css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webpagetoepub/webpagetoepub.github.io.git"
+  },
+  "author": "Carlson Santana Cruz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/webpagetoepub/webpagetoepub.github.io/issues"
+  },
+  "homepage": "https://github.com/webpagetoepub/webpagetoepub.github.io#readme",
+  "devDependencies": {
+    "clean-css-cli": "^5.6.3"
+  }
+}
