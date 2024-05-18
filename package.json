@@ -4,7 +4,8 @@
   "description": "Convert any webpage to an EPUB file",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "concat-css": "cleancss -o css/style.min.css css/normalize.min.css css/milligram.min.css css/main.css"
+    "concat-css": "cleancss -o css/style.min.css css/normalize.min.css css/milligram.min.css css/main.css",
+    "concat-js": "concat-cli -f js/jszip.min.js js/ejs.min.js js/main.js -o js/script.min.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,7 @@
   },
   "homepage": "https://github.com/webpagetoepub/webpagetoepub.github.io#readme",
   "devDependencies": {
-    "clean-css-cli": "^5.6.3"
+    "clean-css-cli": "^5.6.3",
+    "concat-cli": "^4.0.0"
   }
 }
