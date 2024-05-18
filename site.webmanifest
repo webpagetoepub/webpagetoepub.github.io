@@ -1,8 +1,8 @@
 {
-    "name": "Webpage to eEPUB",
+    "name": "Webpage to EPUB",
     "short_name": "Webpage2EPUB",
     "start_url": ".",
-    "description": "Adjust and convert a public webpage to ePUB format.",
+    "description": "Adjust and convert a public webpage to EPUB format.",
     "icons": [
         {
             "src": "/img/android-chrome-192x192.png",
