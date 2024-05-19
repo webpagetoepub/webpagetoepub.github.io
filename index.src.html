@@ -55,7 +55,7 @@
     <script src="js/script.min.js"></script>
     <script>
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => navigator.serviceWorker.register('ws.js'));
+        navigator.serviceWorker.register('ws.js');
       }
     </script>
   </body>
