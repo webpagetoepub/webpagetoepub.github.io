@@ -7,7 +7,8 @@
     "concat-css": "cleancss -o css/style.min.css css/normalize.min.css css/milligram.min.css css/main.css",
     "concat-js": "concat-cli -f js/jszip.min.js js/ejs.min.js js/main.js -o js/script.min.js",
     "minify-html": "html-minifier-terser --collapse-whitespace --remove-comments --remove-comments --remove-redundant-attributes --remove-script-type-attributes index.src.html -o index.html",
-    "generate-pwa": "workbox generateSW workbox-config.js"
+    "generate-pwa": "workbox generateSW workbox-config.js",
+    "build": "run-s concat-css concat-js minify-html generate-pwa"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
     "clean-css-cli": "^5.6.3",
     "concat-cli": "^4.0.0",
     "html-minifier-terser": "^7.2.0",
+    "npm-run-all": "^4.1.5",
     "workbox-cli": "^7.1.0"
   }
 }
