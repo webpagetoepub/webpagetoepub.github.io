@@ -43,5 +43,21 @@
     ],
     "theme_color": "#ffffff",
     "background_color": "#ffffff",
-    "display": "standalone"
+    "display": "standalone",
+    "launch_handler": {
+        "client_mode": "auto"
+    },
+    "dir": "auto",
+    "lang": "en",
+    "orientation": "any",
+    "display_override": [
+        "standalone",
+        "window-controls-overlay",
+        "minimal-ui",
+        "browser"
+    ],
+    "categories": [
+        "utilities",
+        "books"
+    ]
 }
