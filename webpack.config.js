@@ -11,8 +11,8 @@ module.exports = {
   devtool: false,
   entry: {
     bundle: [
-      './js/main.js',
-      './js/style.js',
+      './src/js/main.js',
+      './src/js/style.js',
     ],
   },
   output: {
@@ -38,17 +38,9 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        'manifest.webmanifest',
-        'apple-touch-icon.png',
-        'BingSiteAuth.xml',
-        'browserconfig.xml',
-        'favicon.ico',
-        'googlef50cea303c1ea669.html',
-        'robots.txt',
-        'sitemap.xml',
-        {from: 'img', to: 'img'},
-        {from: 'js/jszip.min.js', to: 'js/jszip.min.js'},
-        {from: 'js/ejs.min.js', to: 'js/ejs.min.js'},
+        {from: 'assets', to: './'},
+        {from: 'src/js/jszip.min.js', to: 'js/jszip.min.js'},
+        {from: 'src/js/ejs.min.js', to: 'js/ejs.min.js'},
       ],
     }),
 
@@ -57,7 +49,7 @@ module.exports = {
     }),
 
     new HtmlWebpackPlugin({
-      template: './index.src.html',
+      template: './src/index.template.html',
       minify: {
         collapseWhitespace: true,
         removeComments: true,
