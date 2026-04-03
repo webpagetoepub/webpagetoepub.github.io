@@ -4,11 +4,7 @@
   "description": "Convert any webpage to an EPUB file",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "concat-css": "cleancss -o css/style.min.css css/normalize.min.css css/milligram.min.css css/main.css",
-    "concat-js": "concat-cli -f js/jszip.min.js js/ejs.min.js js/main.js -o js/script.min.js",
-    "minify-html": "html-minifier-terser --collapse-whitespace --remove-comments --remove-comments --remove-redundant-attributes --remove-script-type-attributes index.src.html -o index.html",
-    "generate-pwa": "workbox generateSW workbox-config.js",
-    "build": "run-s concat-css concat-js minify-html generate-pwa"
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -21,10 +17,14 @@
   },
   "homepage": "https://github.com/webpagetoepub/webpagetoepub.github.io#readme",
   "devDependencies": {
-    "clean-css-cli": "^5.6.3",
-    "concat-cli": "^4.0.0",
-    "html-minifier-terser": "^7.2.0",
-    "npm-run-all": "^4.1.5",
-    "workbox-cli": "^7.1.0"
+    "copy-webpack-plugin": "^14.0.0",
+    "css-loader": "^7.1.4",
+    "css-minimizer-webpack-plugin": "^8.0.0",
+    "html-webpack-plugin": "^5.6.6",
+    "mini-css-extract-plugin": "^2.10.2",
+    "terser-webpack-plugin": "^5.4.0",
+    "webpack": "^5.105.4",
+    "webpack-cli": "^7.0.2",
+    "workbox-webpack-plugin": "^7.4.0"
   }
 }
