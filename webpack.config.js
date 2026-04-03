@@ -4,22 +4,20 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
-const CopyPlugin = require("copy-webpack-plugin");
+const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
-  mode: 'production',
+  mode: 'development',
   devtool: false,
   entry: {
     bundle: [
-      './js/jszip.min.js',
-      './js/ejs.min.js',
       './js/main.js',
       './js/style.js',
     ],
   },
   output: {
     path: path.resolve(__dirname, 'docs'),
-    filename: 'js/bundle.[contenthash].js',
+    filename: 'js/script.[contenthash].js',
     clean: true,
   },
   module: {
@@ -48,7 +46,9 @@ module.exports = {
         'googlef50cea303c1ea669.html',
         'robots.txt',
         'sitemap.xml',
-        {from: "img", to: "img"},
+        {from: 'img', to: 'img'},
+        {from: 'js/jszip.min.js', to: 'js/jszip.min.js'},
+        {from: 'js/ejs.min.js', to: 'js/ejs.min.js'},
       ],
     }),
 
@@ -75,9 +75,9 @@ module.exports = {
       swDest: 'ws.js',
       ignoreURLParametersMatching: [
         /^utm_/,
-        /^fbclid$/
+        /^fbclid$/,
       ],
-      sourcemap: false
+      sourcemap: false,
     }),
   ],
 };
