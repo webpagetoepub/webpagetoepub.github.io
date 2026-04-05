@@ -67,7 +67,7 @@ if (!self.define) {
     });
   };
 }
-define(['./workbox-68847b76'], (function (workbox) { 'use strict';
+define(['./workbox-b7e2fd85'], (function (workbox) { 'use strict';
 
   self.addEventListener('message', event => {
     if (event.data && event.data.type === 'SKIP_WAITING') {
