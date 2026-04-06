@@ -1,4 +1,0 @@
-User-agent: *
-Disallow:
-
-Sitemap: https://webpagetoepub.github.io/sitemap.xml
