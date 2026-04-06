@@ -5,6 +5,8 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const { PurgeCSSPlugin } = require('purgecss-webpack-plugin');
+const glob = require('glob');
 
 module.exports = {
   mode: 'production',
@@ -46,6 +48,10 @@ module.exports = {
 
     new MiniCssExtractPlugin({
       filename: 'css/style.[contenthash].css',
+    }),
+    new PurgeCSSPlugin({
+      paths: glob.sync('src/**/*.html', { nodir: true }),
+      safelist: ['progress'],
     }),
 
     new HtmlWebpackPlugin({
