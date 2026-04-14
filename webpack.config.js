@@ -10,12 +10,18 @@ const glob = require('glob');
 
 module.exports = {
   mode: 'production',
-  devtool: false,
   entry: {
     bundle: [
-      './src/js/main.js',
+      './src/js/main.ts',
       './src/js/style.js',
     ],
+  },
+  resolve: {
+    extensions: ['.ts', '.js'],
+    fallback: {
+      'path': require.resolve('path-browserify'),
+      'fs': false,
+    },
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -28,12 +34,28 @@ module.exports = {
         test: /\.css$/i,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
+      {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
+      },
+      {
+        test: /\.(png|jpg|gif)$/i,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192,
+            },
+          },
+        ],
+      },
     ],
   },
   optimization: {
     minimize: true,
     runtimeChunk: false,
     minimizer: [
+      new TerserPlugin(),
       new CssMinimizerPlugin(),
     ],
   },
@@ -41,8 +63,6 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {from: 'assets', to: './'},
-        {from: 'src/js/jszip.min.js', to: 'js/jszip.min.js'},
-        {from: 'src/js/ejs.min.js', to: 'js/ejs.min.js'},
       ],
     }),
 

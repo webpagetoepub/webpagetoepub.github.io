@@ -22,10 +22,17 @@
     "css-minimizer-webpack-plugin": "^8.0.0",
     "html-webpack-plugin": "^5.6.6",
     "mini-css-extract-plugin": "^2.10.2",
+    "path-browserify": "^1.0.1",
     "purgecss-webpack-plugin": "^8.0.0",
     "terser-webpack-plugin": "^5.4.0",
+    "ts-loader": "^9.5.7",
+    "typescript": "^4.9.4",
+    "url-loader": "^4.1.1",
     "webpack": "^5.105.4",
     "webpack-cli": "^7.0.2",
     "workbox-webpack-plugin": "^7.4.0"
+  },
+  "dependencies": {
+    "html2epub": "github:webpagetoepub/html2epub#e22ed893ce17ce94ad67ecf5ceea7724a36ac142"
   }
 }
