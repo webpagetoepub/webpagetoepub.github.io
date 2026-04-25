@@ -33,6 +33,6 @@
     "workbox-webpack-plugin": "^7.4.0"
   },
   "dependencies": {
-    "html2epub": "github:webpagetoepub/html2epub#de41aaaff1d29ce7d36860e37a4789205880976b"
+    "html2epub": "github:webpagetoepub/html2epub#d0c8bae4fd9564825281e9b543a95a5cea06a940"
   }
 }
