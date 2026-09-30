@@ -37,6 +37,6 @@
     "webpack-cli": "^7.0.2"
   },
   "dependencies": {
-    "html2epub": "github:webpagetoepub/html2epub#47a9c72c23565c6ba9b3766eee764d6ee533d7f1"
+    "html2epub": "github:webpagetoepub/html2epub#665e733f080af8e5526a07eae6303c202f7a26ad"
   }
 }
