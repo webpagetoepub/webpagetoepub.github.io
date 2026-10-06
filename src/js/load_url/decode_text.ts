@@ -70,7 +70,7 @@ function decodeBytes(bytes: Uint8Array, headerCharset: string | null = null): st
   // resort decode as UTF-8 and replace the bad bytes.
   const fallback = tryDecodeWith(bytes, 'windows-1252', false);
 
-  return decodeWith(bytes, 'utf-8', true);
+  return fallback !== null ? fallback : decodeWith(bytes, 'utf-8', false);
 }
 
 function sniffDeclaredEncoding(bytes: Uint8Array): string | null {
