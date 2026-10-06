@@ -9,6 +9,13 @@
 //   3. `<meta charset>` / `<meta http-equiv="Content-Type">` / `<?xml encoding>`
 //      found in the beginning of the document
 //   4. UTF-8, falling back to windows-1252 when the bytes are not valid UTF-8
+//
+// Steps 1 and 2 are "transport" signals that outrank the document, but a proxy
+// that rewrites the response can forge them: ours always stamps the
+// Content-Type as `charset=UTF-8` (turning legacy pages into mojibake) and may
+// add or drop a BOM. When the response comes through such a proxy, pass
+// `trustTransport: false` to skip the header and BOM and rely on the
+// in-document declaration and byte-level detection instead.
 
 const PRESCAN_BYTES = 64 * 1024;
 
@@ -16,16 +23,16 @@ const META_CHARSET_REGEX = /<meta\b[^>]*?charset\s*=\s*["']?\s*([\w.:-]+)/i;
 const XML_ENCODING_REGEX = /^\s*<\?xml\b[^>]*?encoding\s*=\s*["']([\w.:-]+)["']/i;
 const CONTENT_TYPE_CHARSET_REGEX = /;\s*charset\s*=\s*["']?\s*([\w.:-]+)/i;
 
-export default function decodeResponseText(response: Response): Promise<string> {
+export default function decodeResponseText(response: Response, trustTransport = true): Promise<string> {
   // Without TextDecoder the encoding can't be honoured; keep the previous
   // behaviour (UTF-8) rather than failing the download.
   if (typeof TextDecoder === 'undefined') {
     return response.text();
   }
 
-  const headerCharset = charsetFromResponse(response);
+  const headerCharset = trustTransport ? charsetFromResponse(response) : null;
 
-  return response.arrayBuffer().then(buffer => decodeBytes(new Uint8Array(buffer), headerCharset));
+  return response.arrayBuffer().then(buffer => decodeBytes(new Uint8Array(buffer), headerCharset, trustTransport));
 }
 
 function charsetFromResponse(response: Response): string | null {
@@ -39,10 +46,12 @@ function charsetFromResponse(response: Response): string | null {
   return match ? match[1] : null;
 }
 
-function decodeBytes(bytes: Uint8Array, headerCharset: string | null = null): string {
-  const bom = encodingFromBOM(bytes);
-  if (bom) {
-    return decodeWith(bytes, bom, false);
+function decodeBytes(bytes: Uint8Array, headerCharset: string | null = null, trustTransport = true): string {
+  if (trustTransport) {
+    const bom = encodingFromBOM(bytes);
+    if (bom) {
+      return decodeWith(bytes, bom, false);
+    }
   }
 
   // A declared encoding is authoritative (transport header wins over the
