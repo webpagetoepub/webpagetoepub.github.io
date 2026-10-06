@@ -1,10 +1,9 @@
 import directClient from './direct';
-import alloriginsClient from './proxy_allorigins';
 import webpageToEpubClient from './proxy_webpagetoepub';
 import Client from './client';
 
 
-const PROXY_CLIENTS = [alloriginsClient, webpageToEpubClient];
+const PROXY_CLIENTS = [webpageToEpubClient];
 
 export function requestTextContent(url: string) {
   return request(client => client.requestTextContent(url));
