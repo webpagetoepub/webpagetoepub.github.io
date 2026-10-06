@@ -23,12 +23,13 @@ export default function decodeResponseText(response: Response): Promise<string> 
     return response.text();
   }
 
-  const headerCharset = charsetFromContentType(response.headers.get('content-type'));
+  const headerCharset = charsetFromResponse(response);
 
   return response.arrayBuffer().then(buffer => decodeBytes(new Uint8Array(buffer), headerCharset));
 }
 
-function charsetFromContentType(contentType: string | null): string | null {
+function charsetFromResponse(response: Response): string | null {
+  const contentType = response.headers.get('content-type');
   if (!contentType) {
     return null;
   }
@@ -44,29 +45,32 @@ function decodeBytes(bytes: Uint8Array, headerCharset: string | null = null): st
     return decodeWith(bytes, bom, false);
   }
 
-  for (const encoding of candidateEncodings(bytes, headerCharset)) {
-    const text = tryDecodeWith(bytes, encoding, true);
+  // A declared encoding is authoritative (transport header wins over the
+  // in-document declaration), so commit to it rather than second-guessing it:
+  // the browser decodes with it even when some bytes don't fit, replacing the
+  // bad ones instead of falling back to a different encoding.
+  const declared = normalizeLabel(headerCharset)
+    || normalizeLabel(sniffDeclaredEncoding(bytes), true);
+  if (declared) {
+    const text = tryDecodeWith(bytes, declared, false);
     if (text !== null) {
       return text;
     }
   }
 
-  // Nothing decoded cleanly (invalid byte sequences). windows-1252 accepts
-  // every byte and is what browsers fall back to for undeclared pages. A
-  // TextDecoder that only knows UTF-8 can't do that, so replace the bad bytes.
+  // Nothing was declared: default to UTF-8, but only if the bytes really are
+  // valid UTF-8. Otherwise fall back to windows-1252, which accepts every byte
+  // and is what browsers use for undeclared non-UTF-8 pages.
+  const utf8 = tryDecodeWith(bytes, 'utf-8', true);
+  if (utf8 !== null) {
+    return utf8;
+  }
+
+  // A TextDecoder that only knows UTF-8 can't do windows-1252, so as a last
+  // resort decode as UTF-8 and replace the bad bytes.
   const fallback = tryDecodeWith(bytes, 'windows-1252', false);
 
-  return fallback !== null ? fallback : decodeWith(bytes, 'utf-8', false);
-}
-
-// Encodings to try, most trustworthy first: transport header, in-document
-// declaration, then the UTF-8 default.
-function candidateEncodings(bytes: Uint8Array, headerCharset: string | null): string[] {
-  return uniqueEncodings([
-    normalizeLabel(headerCharset),
-    normalizeLabel(sniffDeclaredEncoding(bytes), true),
-    'utf-8',
-  ]);
+  return decodeWith(bytes, 'utf-8', true);
 }
 
 function sniffDeclaredEncoding(bytes: Uint8Array): string | null {
@@ -122,18 +126,6 @@ function normalizeLabel(label: string | null, fromDocument = false): string | nu
   } catch (_) {
     return null;
   }
-}
-
-function uniqueEncodings(encodings: (string | null)[]): string[] {
-  const result: string[] = [];
-
-  for (const encoding of encodings) {
-    if (encoding && result.indexOf(encoding) === -1) {
-      result.push(encoding);
-    }
-  }
-
-  return result;
 }
 
 function tryDecodeWith(bytes: Uint8Array, encoding: string, fatal: boolean): string | null {
