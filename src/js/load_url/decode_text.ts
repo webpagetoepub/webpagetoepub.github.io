@@ -28,7 +28,7 @@ export default function decodeResponseText(response: Response): Promise<string> 
   return response.arrayBuffer().then(buffer => decodeBytes(new Uint8Array(buffer), headerCharset));
 }
 
-export function charsetFromContentType(contentType: string | null): string | null {
+function charsetFromContentType(contentType: string | null): string | null {
   if (!contentType) {
     return null;
   }
@@ -38,7 +38,7 @@ export function charsetFromContentType(contentType: string | null): string | nul
   return match ? match[1] : null;
 }
 
-export function decodeBytes(bytes: Uint8Array, headerCharset: string | null = null): string {
+function decodeBytes(bytes: Uint8Array, headerCharset: string | null = null): string {
   const bom = encodingFromBOM(bytes);
   if (bom) {
     return decodeWith(bytes, bom, false);
@@ -69,7 +69,7 @@ function candidateEncodings(bytes: Uint8Array, headerCharset: string | null): st
   ]);
 }
 
-export function sniffDeclaredEncoding(bytes: Uint8Array): string | null {
+function sniffDeclaredEncoding(bytes: Uint8Array): string | null {
   const head = asciiString(bytes.subarray(0, PRESCAN_BYTES));
   const bodyStart = head.search(/<body\b/i);
   const scanned = bodyStart === -1 ? head : head.slice(0, bodyStart);
