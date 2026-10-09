@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "dev": "concurrently -k -n build,serve -c blue,green \"nodemon --watch src --watch assets --ext ts,js,html,css,png,jpg,gif,ico,xml,webmanifest --exec \\\"npm run build\\\"\" \"http-server dist -c-1 -p 8080\""
+    "dev": "concurrently -k -n build,serve -c blue,green \"nodemon --watch src --watch assets --ext ts,js,html,css,png,jpg,gif,ico,xml,webmanifest --exec \\\"npm run build\\\"\" \"http-server dist -c-1 -p 8080\"",
+    "format": "prettier --write \"src/**/*.ts\" \"*.js\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"*.js\""
   },
   "repository": {
     "type": "git",
@@ -37,6 +39,7 @@
     "webpack-cli": "^7.0.2"
   },
   "dependencies": {
-    "html2epub": "github:webpagetoepub/html2epub#665e733f080af8e5526a07eae6303c202f7a26ad"
+    "html2epub": "github:webpagetoepub/html2epub#665e733f080af8e5526a07eae6303c202f7a26ad",
+    "prettier": "^3.9.9"
   }
 }
