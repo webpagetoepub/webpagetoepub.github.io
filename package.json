@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "dev": "concurrently -k -n build,serve -c blue,green \"nodemon --watch src --watch assets --ext ts,js,html,css,png,jpg,gif,ico,xml,webmanifest --exec \\\"npm run build\\\"\" \"http-server dist -c-1 -p 8080\"",
+    "build:dev": "webpack --mode development",
+    "dev": "concurrently -k -n build,serve,proxy -c blue,green,yellow \"nodemon --watch src --watch assets --ext ts,js,html,css,png,jpg,gif,ico,xml,webmanifest --exec \\\"npm run build:dev\\\"\" \"http-server dist -c-1 -p 8080\" \"node ./scripts/dev-proxy.mts\"",
     "format": "prettier --write \"src/**/*.ts\" \"*.js\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"*.js\"",
     "lint": "eslint src *.js *.mjs",
@@ -24,8 +25,10 @@
   "homepage": "https://github.com/webpagetoepub/webpagetoepub.github.io#readme",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/node": "^25.5.2",
     "concurrently": "^9.1.0",
     "copy-webpack-plugin": "^14.0.0",
+    "cors-anywhere": "^0.4.4",
     "css-loader": "^7.1.4",
     "css-minimizer-webpack-plugin": "^8.0.0",
     "eslint": "^10.11.0",

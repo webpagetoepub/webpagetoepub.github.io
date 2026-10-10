@@ -1,8 +1,14 @@
 import directClient from "./direct";
 import webpageToEpubClient from "./proxy_webpagetoepub";
+import localProxyClient from "./proxy_local";
 import Client from "./client";
 
-const PROXY_CLIENTS = [webpageToEpubClient];
+// In development the hosted proxy rejects the localhost origin, so swap it for
+// the local cors-anywhere proxy (see proxy_local.ts / scripts/dev-proxy.mts).
+const PROXY_CLIENTS =
+  process.env.NODE_ENV === "development"
+    ? [localProxyClient]
+    : [webpageToEpubClient];
 
 export function requestTextContent(url: string) {
   return request((client) => client.requestTextContent(url));

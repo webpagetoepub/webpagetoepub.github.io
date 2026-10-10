@@ -5,7 +5,15 @@ import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import CopyPlugin from "copy-webpack-plugin";
 import { PurgeCSSPlugin } from "purgecss-webpack-plugin";
-import glob from "glob";
+import { globSync } from "glob";
+import { createRequire } from "module";
+import { fileURLToPath } from "url";
+
+// This config is loaded as an ES module (it uses `import`), so the CommonJS
+// globals `require` and `__dirname` must be reconstructed.
+const require = createRequire(import.meta.url);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 const SITE_URL = "https://webpagetoepub.github.io/";
 
 // Last modification date: the build date (YYYY-MM-DD).
@@ -44,7 +52,7 @@ class SitemapPlugin {
   }
 }
 
-module.exports = {
+export default {
   mode: "production",
   entry: {
     bundle: ["./src/js/main.ts", "./src/js/style.js"],
@@ -100,7 +108,7 @@ module.exports = {
       filename: "css/style.[contenthash].css",
     }),
     new PurgeCSSPlugin({
-      paths: glob.sync("src/**/*.html", { nodir: true }),
+      paths: globSync("src/**/*.html", { nodir: true }),
       safelist: ["progress", "output", "info", "error"],
     }),
 
