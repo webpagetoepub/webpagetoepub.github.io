@@ -8,7 +8,8 @@
     "dev": "concurrently -k -n build,serve -c blue,green \"nodemon --watch src --watch assets --ext ts,js,html,css,png,jpg,gif,ico,xml,webmanifest --exec \\\"npm run build\\\"\" \"http-server dist -c-1 -p 8080\"",
     "format": "prettier --write \"src/**/*.ts\" \"*.js\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"*.js\"",
-    "lint": "eslint src *.js *.mjs"
+    "lint": "eslint src *.js *.mjs",
+    "typecheck": "tsc --noEmit --skipLibCheck"
   },
   "repository": {
     "type": "git",
