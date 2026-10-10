@@ -16,6 +16,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const SITE_URL = "https://webpagetoepub.github.io/";
 
+// Version shown in the page footer, read from package.json at build time.
+const { version: APP_VERSION } = require("./package.json");
+
 // Last modification date: the build date (YYYY-MM-DD).
 function lastModified() {
   return new Date().toISOString().slice(0, 10);
@@ -114,6 +117,7 @@ export default {
 
     new HtmlWebpackPlugin({
       template: "./src/index.template.html",
+      templateParameters: { version: APP_VERSION },
       minify: {
         collapseWhitespace: true,
         removeComments: true,
