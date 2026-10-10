@@ -9,7 +9,8 @@
     "format": "prettier --write \"src/**/*.ts\" \"*.js\"",
     "format:check": "prettier --check \"src/**/*.ts\" \"*.js\"",
     "lint": "eslint src *.js *.mjs",
-    "typecheck": "tsc --noEmit --skipLibCheck"
+    "typecheck": "tsc --noEmit --skipLibCheck",
+    "check:unused-files": "knip --production --include files"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "globals": "^17.13.0",
     "html-webpack-plugin": "^5.6.6",
     "http-server": "^14.1.1",
+    "knip": "^6.39.0",
     "mini-css-extract-plugin": "^2.10.2",
     "nodemon": "^3.1.7",
     "path-browserify": "^1.0.1",

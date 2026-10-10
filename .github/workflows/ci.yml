@@ -26,5 +26,8 @@ jobs:
       - name: Type check
         run: npm run typecheck
 
+      - name: Check unused files
+        run: npm run check:unused-files
+
       - name: Lint
         run: npm run lint
