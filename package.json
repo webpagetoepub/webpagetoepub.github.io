@@ -1,6 +1,6 @@
 {
   "name": "webpagetoepub",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Convert any webpage to an EPUB file",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -51,6 +51,6 @@
     "webpack-cli": "^7.0.2"
   },
   "dependencies": {
-    "html2epub": "github:webpagetoepub/html2epub#665e733f080af8e5526a07eae6303c202f7a26ad"
+    "html2epub": "github:webpagetoepub/html2epub#4c70da78eab25094b338181c26a0f663a5e88990"
   }
 }
