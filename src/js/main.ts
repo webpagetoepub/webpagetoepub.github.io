@@ -1,10 +1,12 @@
-import convertPageToEPUB from 'html2epub';
-import { requestTextContent, loadFileFrom } from './load_url';
+import convertPageToEPUB from "html2epub";
+import { requestTextContent, loadFileFrom } from "./load_url";
 
 const REVOKE_URL_TIME_MILISECONDS = 1000 * 60 * 30;
 
-const formElement = document.getElementById('form');
-const downloadButton = document.querySelector('button[type=submit]') as HTMLInputElement;
+const formElement = document.getElementById("form");
+const downloadButton = document.querySelector(
+  "button[type=submit]",
+) as HTMLInputElement;
 let progressBarElement: Element = null;
 let output: Element = null;
 
@@ -12,19 +14,19 @@ formElement.onsubmit = (event: Event) => {
   event.preventDefault();
   disableButton();
 
-  const inputUrlElement = document.getElementById('url') as HTMLInputElement;
+  const inputUrlElement = document.getElementById("url") as HTMLInputElement;
   const url = inputUrlElement.value;
 
-  const main = document.querySelector('main') as Element;
+  const main = document.querySelector("main") as Element;
   if (progressBarElement === null) {
-    progressBarElement = document.createElement('progress');
+    progressBarElement = document.createElement("progress");
     main.appendChild(progressBarElement as Element);
   }
 
   if (output !== null) {
     output.remove();
   }
-  output = document.createElement('output');
+  output = document.createElement("output");
   main.appendChild(output);
 
   convertPageToEPUB(
@@ -36,39 +38,41 @@ formElement.onsubmit = (event: Event) => {
     {
       log: (message: string) => {
         console.log(message);
-        logMessage(output, message, 'info');
+        logMessage(output, message, "info");
       },
       error: (message: string) => {
         console.error(message);
-        logMessage(output, message, 'error');
+        logMessage(output, message, "error");
       },
     },
-  ).catch((error) => {
-    enableButton();
+  )
+    .catch((error) => {
+      enableButton();
 
-    alert(error.message);
+      alert(error.message);
 
-    throw error;
-  }).then(downloadEPUB);
+      throw error;
+    })
+    .then(downloadEPUB);
 
   return false;
 };
 
-function logMessage(output: Element, message: string, type: 'info' | 'error') {
-  const span = document.createElement('p');
-  span.setAttribute('class', type);
+function logMessage(output: Element, message: string, type: "info" | "error") {
+  const span = document.createElement("p");
+  span.setAttribute("class", type);
   span.appendChild(document.createTextNode(message));
 
   output.appendChild(span);
 }
 
-function downloadEPUB({title, epub}: {title: string, epub: Blob}) {
+function downloadEPUB({ title, epub }: { title: string; epub: Blob }) {
   const basename = slug(title);
   const url = URL.createObjectURL(epub);
-  const link = document.createElement('a');
+  const link = document.createElement("a");
   link.href = url;
-  link.textContent = 'Download EPUB';
-  link.download = basename + '.epub';
+  link.textContent = "Download EPUB";
+  link.download = basename + ".epub";
 
   document.body.appendChild(link);
   link.click();
@@ -87,7 +91,7 @@ function enableButton() {
   downloadButton.disabled = false;
 }
 
-const DEFAULT_BASENAME = 'webpage';
+const DEFAULT_BASENAME = "webpage";
 
 // Matches everything that isn't a letter, a digit or whitespace, in any
 // script (not only ASCII), so pages with non-Latin titles don't end up
@@ -97,20 +101,24 @@ const DEFAULT_BASENAME = 'webpage';
 // ASCII-only behaviour.
 const NOT_SLUG_CHARS_REGEX = (() => {
   try {
-    return new RegExp('[^\\p{L}\\p{N}\\s]', 'gu');
+    return new RegExp("[^\\p{L}\\p{N}\\s]", "gu");
   } catch (_) {
     return /[^a-z0-9\s]/g;
   }
 })();
 
 function slug(title: string) {
-  const basename = title.toLowerCase().replace(NOT_SLUG_CHARS_REGEX, '').trim().replace(/\s+/g, '-');
+  const basename = title
+    .toLowerCase()
+    .replace(NOT_SLUG_CHARS_REGEX, "")
+    .trim()
+    .replace(/\s+/g, "-");
 
   return basename || DEFAULT_BASENAME;
 }
 
 function updateProgressLength(maxValue: number) {
-  (progressBarElement as Element).setAttribute('max', maxValue.toString());
+  (progressBarElement as Element).setAttribute("max", maxValue.toString());
 }
 
 function updateProgressStep() {
@@ -118,6 +126,9 @@ function updateProgressStep() {
 
   return () => {
     currentValue++;
-    (progressBarElement as Element).setAttribute('value', currentValue.toString());
-  }
+    (progressBarElement as Element).setAttribute(
+      "value",
+      currentValue.toString(),
+    );
+  };
 }

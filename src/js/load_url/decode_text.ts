@@ -20,23 +20,31 @@
 const PRESCAN_BYTES = 64 * 1024;
 
 const META_CHARSET_REGEX = /<meta\b[^>]*?charset\s*=\s*["']?\s*([\w.:-]+)/i;
-const XML_ENCODING_REGEX = /^\s*<\?xml\b[^>]*?encoding\s*=\s*["']([\w.:-]+)["']/i;
+const XML_ENCODING_REGEX =
+  /^\s*<\?xml\b[^>]*?encoding\s*=\s*["']([\w.:-]+)["']/i;
 const CONTENT_TYPE_CHARSET_REGEX = /;\s*charset\s*=\s*["']?\s*([\w.:-]+)/i;
 
-export default function decodeResponseText(response: Response, trustTransport = true): Promise<string> {
+export default function decodeResponseText(
+  response: Response,
+  trustTransport = true,
+): Promise<string> {
   // Without TextDecoder the encoding can't be honoured; keep the previous
   // behaviour (UTF-8) rather than failing the download.
-  if (typeof TextDecoder === 'undefined') {
+  if (typeof TextDecoder === "undefined") {
     return response.text();
   }
 
   const headerCharset = trustTransport ? charsetFromResponse(response) : null;
 
-  return response.arrayBuffer().then(buffer => decodeBytes(new Uint8Array(buffer), headerCharset, trustTransport));
+  return response
+    .arrayBuffer()
+    .then((buffer) =>
+      decodeBytes(new Uint8Array(buffer), headerCharset, trustTransport),
+    );
 }
 
 function charsetFromResponse(response: Response): string | null {
-  const contentType = response.headers.get('content-type');
+  const contentType = response.headers.get("content-type");
   if (!contentType) {
     return null;
   }
@@ -46,7 +54,11 @@ function charsetFromResponse(response: Response): string | null {
   return match ? match[1] : null;
 }
 
-function decodeBytes(bytes: Uint8Array, headerCharset: string | null = null, trustTransport = true): string {
+function decodeBytes(
+  bytes: Uint8Array,
+  headerCharset: string | null = null,
+  trustTransport = true,
+): string {
   if (trustTransport) {
     const bom = encodingFromBOM(bytes);
     if (bom) {
@@ -58,8 +70,9 @@ function decodeBytes(bytes: Uint8Array, headerCharset: string | null = null, tru
   // in-document declaration), so commit to it rather than second-guessing it:
   // the browser decodes with it even when some bytes don't fit, replacing the
   // bad ones instead of falling back to a different encoding.
-  const declared = normalizeLabel(headerCharset)
-    || normalizeLabel(sniffDeclaredEncoding(bytes), true);
+  const declared =
+    normalizeLabel(headerCharset) ||
+    normalizeLabel(sniffDeclaredEncoding(bytes), true);
   if (declared) {
     const text = tryDecodeWith(bytes, declared, false);
     if (text !== null) {
@@ -70,16 +83,16 @@ function decodeBytes(bytes: Uint8Array, headerCharset: string | null = null, tru
   // Nothing was declared: default to UTF-8, but only if the bytes really are
   // valid UTF-8. Otherwise fall back to windows-1252, which accepts every byte
   // and is what browsers use for undeclared non-UTF-8 pages.
-  const utf8 = tryDecodeWith(bytes, 'utf-8', true);
+  const utf8 = tryDecodeWith(bytes, "utf-8", true);
   if (utf8 !== null) {
     return utf8;
   }
 
   // A TextDecoder that only knows UTF-8 can't do windows-1252, so as a last
   // resort decode as UTF-8 and replace the bad bytes.
-  const fallback = tryDecodeWith(bytes, 'windows-1252', false);
+  const fallback = tryDecodeWith(bytes, "windows-1252", false);
 
-  return fallback !== null ? fallback : decodeWith(bytes, 'utf-8', false);
+  return fallback !== null ? fallback : decodeWith(bytes, "utf-8", false);
 }
 
 function sniffDeclaredEncoding(bytes: Uint8Array): string | null {
@@ -101,14 +114,19 @@ function sniffDeclaredEncoding(bytes: Uint8Array): string | null {
 }
 
 function encodingFromBOM(bytes: Uint8Array): string | null {
-  if (bytes.length >= 3 && bytes[0] === 0xEF && bytes[1] === 0xBB && bytes[2] === 0xBF) {
-    return 'utf-8';
+  if (
+    bytes.length >= 3 &&
+    bytes[0] === 0xef &&
+    bytes[1] === 0xbb &&
+    bytes[2] === 0xbf
+  ) {
+    return "utf-8";
   }
-  if (bytes.length >= 2 && bytes[0] === 0xFE && bytes[1] === 0xFF) {
-    return 'utf-16be';
+  if (bytes.length >= 2 && bytes[0] === 0xfe && bytes[1] === 0xff) {
+    return "utf-16be";
   }
-  if (bytes.length >= 2 && bytes[0] === 0xFF && bytes[1] === 0xFE) {
-    return 'utf-16le';
+  if (bytes.length >= 2 && bytes[0] === 0xff && bytes[1] === 0xfe) {
+    return "utf-16le";
   }
 
   return null;
@@ -117,17 +135,20 @@ function encodingFromBOM(bytes: Uint8Array): string | null {
 // Applies the label rules of the HTML standard: unknown labels are ignored,
 // `x-user-defined` is treated as windows-1252 and an in-document declaration
 // of UTF-16 can't be right for bytes without a BOM, so it means UTF-8.
-function normalizeLabel(label: string | null, fromDocument = false): string | null {
+function normalizeLabel(
+  label: string | null,
+  fromDocument = false,
+): string | null {
   if (!label) {
     return null;
   }
 
   const lowerLabel = label.trim().toLowerCase();
-  if (lowerLabel === 'x-user-defined') {
-    return 'windows-1252';
+  if (lowerLabel === "x-user-defined") {
+    return "windows-1252";
   }
-  if (fromDocument && lowerLabel.indexOf('utf-16') === 0) {
-    return 'utf-8';
+  if (fromDocument && lowerLabel.indexOf("utf-16") === 0) {
+    return "utf-8";
   }
 
   try {
@@ -137,7 +158,11 @@ function normalizeLabel(label: string | null, fromDocument = false): string | nu
   }
 }
 
-function tryDecodeWith(bytes: Uint8Array, encoding: string, fatal: boolean): string | null {
+function tryDecodeWith(
+  bytes: Uint8Array,
+  encoding: string,
+  fatal: boolean,
+): string | null {
   try {
     return decodeWith(bytes, encoding, fatal);
   } catch (_) {
@@ -145,16 +170,23 @@ function tryDecodeWith(bytes: Uint8Array, encoding: string, fatal: boolean): str
   }
 }
 
-function decodeWith(bytes: Uint8Array, encoding: string, fatal: boolean): string {
-  return new TextDecoder(encoding, {fatal}).decode(bytes);
+function decodeWith(
+  bytes: Uint8Array,
+  encoding: string,
+  fatal: boolean,
+): string {
+  return new TextDecoder(encoding, { fatal }).decode(bytes);
 }
 
 function asciiString(bytes: Uint8Array): string {
-  let result = '';
+  let result = "";
 
   for (let i = 0; i < bytes.length; i += 8192) {
     const chunk = bytes.subarray(i, i + 8192);
-    result += String.fromCharCode.apply(null, Array.prototype.slice.call(chunk));
+    result += String.fromCharCode.apply(
+      null,
+      Array.prototype.slice.call(chunk),
+    );
   }
 
   return result;

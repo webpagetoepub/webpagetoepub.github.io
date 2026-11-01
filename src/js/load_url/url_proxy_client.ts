@@ -1,4 +1,4 @@
-import DirectClient from './direct_client';
+import DirectClient from "./direct_client";
 
 export default class URLProxyClient extends DirectClient {
   proxyURL: string;
