@@ -11,7 +11,8 @@
     "format:check": "prettier --check \"src/**/*.ts\" \"*.js\"",
     "lint": "eslint src *.js *.mjs",
     "typecheck": "tsc --noEmit --skipLibCheck",
-    "check:unused-files": "knip --production --include files"
+    "check:unused-files": "knip --production --include files",
+    "lighthouse": "lhci autorun"
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
   "homepage": "https://github.com/webpagetoepub/webpagetoepub.github.io#readme",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@lhci/cli": "^0.16.0",
     "@types/node": "^25.5.2",
     "concurrently": "^9.1.0",
     "copy-webpack-plugin": "^14.0.0",
