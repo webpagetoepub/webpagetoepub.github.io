@@ -67,7 +67,7 @@ class MinifyJsonLdPlugin {
         (data) => {
           data.html = data.html.replace(
             /(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/g,
-            (match, open, body, close) =>
+            (_, open, body, close) =>
               open + JSON.stringify(JSON.parse(body)) + close,
           );
           return data;
