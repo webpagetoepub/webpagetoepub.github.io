@@ -29,7 +29,7 @@
         "applicationCategory": "Utility",
         "operatingSystem": "Web",
         "description": "Easily convert any webpage to an EPUB file with our free online tool. Just paste the URL and download your EPUB for offline reading on any device.",
-        "version": "1.0.0",
+        "version": "<%= version %>",
         "url": "https://webpagetoepub.github.io/",
         "offers": {
           "@type": "Offer",
@@ -169,11 +169,16 @@
             <a
               href="https://addons.mozilla.org/firefox/addon/webpage-to-epub/"
               rel="noopener" target="_blank">
-              <img
-                src="/img/firefox-add-ons-badge.png"
-                alt="Get the add-on for Firefox"
-                width="172"
-                height="60" />
+              <picture>
+                <source
+                  srcset="/img/firefox-add-ons-badge.svg"
+                  type="image/svg+xml" />
+                <img
+                  src="/img/firefox-add-ons-badge.png"
+                  alt="Get the add-on for Firefox"
+                  width="172"
+                  height="60" />
+              </picture>
             </a>
           </div>
         </section>

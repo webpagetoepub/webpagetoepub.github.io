@@ -55,6 +55,28 @@ class SitemapPlugin {
   }
 }
 
+// Minifies the JSON inside <script type="application/ld+json"> blocks of the
+// generated HTML. html-minifier-terser's minifyJS only handles JavaScript, so
+// the structured data is parsed and re-stringified without whitespace here.
+// Keeping the source template indented stays readable; the shipped HTML is compact.
+class MinifyJsonLdPlugin {
+  apply(compiler) {
+    compiler.hooks.compilation.tap("MinifyJsonLdPlugin", (compilation) => {
+      HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tap(
+        "MinifyJsonLdPlugin",
+        (data) => {
+          data.html = data.html.replace(
+            /(<script type="application\/ld\+json">)([\s\S]*?)(<\/script>)/g,
+            (_, open, body, close) =>
+              open + JSON.stringify(JSON.parse(body)) + close,
+          );
+          return data;
+        },
+      );
+    });
+  }
+}
+
 export default {
   mode: "production",
   entry: {
@@ -123,5 +145,7 @@ export default {
         removeComments: true,
       },
     }),
+
+    new MinifyJsonLdPlugin(),
   ],
 };
