@@ -5,7 +5,12 @@ import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
 import CopyPlugin from "copy-webpack-plugin";
 import { PurgeCSSPlugin } from "purgecss-webpack-plugin";
+import ImageMinimizerPlugin from "image-minimizer-webpack-plugin";
+import oxipngOptimise, {
+  init as oxipngInit,
+} from "@jsquash/oxipng/optimise.js";
 import { globSync } from "glob";
+import { readFileSync } from "fs";
 import { createRequire } from "module";
 import { fileURLToPath } from "url";
 
@@ -13,6 +18,51 @@ import { fileURLToPath } from "url";
 // globals `require` and `__dirname` must be reconstructed.
 const require = createRequire(import.meta.url);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Lossless PNG optimizer backed by OxiPNG compiled to WebAssembly (no native
+// binary / OS package needed). @jsquash/oxipng is browser-first: its default
+// init() fetch()es the .wasm, which Node can't do, so the bytes are read from
+// disk and handed to init() once. The module caches the instance, so later
+// optimise() calls reuse it. Used as a custom image-minimizer-webpack-plugin
+// minimizer below; runs only in this production build.
+let oxipngReady;
+function ensureOxipng() {
+  if (!oxipngReady) {
+    const wasm = readFileSync(
+      require.resolve("@jsquash/oxipng/codec/pkg/squoosh_oxipng_bg.wasm"),
+    );
+    oxipngReady = oxipngInit(wasm);
+  }
+  return oxipngReady;
+}
+
+async function oxipngMinify(original) {
+  if (!/\.png$/i.test(original.filename)) {
+    return original;
+  }
+  try {
+    await ensureOxipng();
+    const input = original.data;
+    const optimized = await oxipngOptimise(
+      input.buffer.slice(input.byteOffset, input.byteOffset + input.byteLength),
+      { level: 6, interlace: false },
+    );
+    return {
+      filename: original.filename,
+      data: Buffer.from(optimized),
+      info: {
+        ...original.info,
+        minimized: true,
+        minimizedBy: [...(original.info?.minimizedBy ?? []), "oxipng"],
+      },
+      warnings: [...original.warnings],
+      errors: [...original.errors],
+    };
+  } catch (error) {
+    original.errors.push(error);
+    return original;
+  }
+}
 
 const SITE_URL = "https://webpagetoepub.github.io/";
 
@@ -120,7 +170,28 @@ export default {
   optimization: {
     minimize: true,
     runtimeChunk: false,
-    minimizer: [new TerserPlugin(), new CssMinimizerPlugin()],
+    minimizer: [
+      new TerserPlugin(),
+      new CssMinimizerPlugin(),
+      // Lossless image optimization for assets emitted into dist/ (including
+      // the static files copied from assets/ by CopyPlugin). SVG via svgo
+      // (pure JS); PNG via the OxiPNG/WASM minimizer above. Both are lossless.
+      new ImageMinimizerPlugin({
+        test: /\.(png|svg)$/i,
+        minimizer: [
+          {
+            implementation: ImageMinimizerPlugin.svgoMinify,
+            filter: (_source, name) => /\.svg$/i.test(name),
+            options: {
+              encodeOptions: { multipass: true, plugins: ["preset-default"] },
+            },
+          },
+          {
+            implementation: oxipngMinify,
+          },
+        ],
+      }),
+    ],
   },
   plugins: [
     new CopyPlugin({
